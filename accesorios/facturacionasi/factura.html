@@ -1,0 +1,60 @@
+<html>
+<body>
+    <div>
+        <img src="logo1.jpg" alt="">
+        Mueblería Díaz y Solis SA de CV
+    </div>
+    <div>
+        <div>
+            Emisor: {{ nombreemisor }}
+            Régimen Fiscal: {{regimenfiscalemisor}}
+            RFC: {{rfcemisor}}
+    
+        </div>
+        <div>
+            Receptor: {{nombrerecceptor}}
+            Régimen Fiscal: {{regimenfiscalreceptor}}
+            Dirección {{direccionreceptor}}
+            Ciudad: {{ciudadreceptor}}
+            Codigo Postal: {{codigopostal}}
+            RFC: {{rfcreceptor}}
+        </div>
+        <div>
+            Factura: {{seriefactura}} {{foliofactura}}
+            Fecha: {{fechafactura}}
+            Uso CFDI: {{usocfdi}}
+            Método de pago: {{metododepago}}
+            Forma de Pago: {{formadepago}}
+            UUID: {{uuidfactura}}
+            Fecha y Hora certificacion: {{fechacertificacion}}
+
+        </div>
+    
+    </div>
+    <div class="productos">
+        <table>
+            <thead>
+                <tr>
+                    <th>Clave Prod. Serv</th>
+                    <th> No. Identificacion</th>
+                    <th>Descripción del Producto </th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>Clave Unidad</th>
+                    <th>Valor Unitario</th>
+                    <th>Descuento</th>
+                    <th>Importe</th>
+                    <th>Objeto Impuesto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{claveprod}} </td>
+                    <td>{{skuprod}} </td>
+                </tr>
+            </tbody>
+        </table>
+        <article></article>
+    </div>
+</body>
+</html>
