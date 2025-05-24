@@ -60,7 +60,7 @@
           "importe" => $movcli_z["importe"],
         );
         # echo "Busca movimiento: " . $movcli_z["idventa"] . " " . $movcli_z["fechamov"] . " " . 
-        $codtda_z . " " . $concepto . " Importe " . $movcli_z["importe"] . "<br>\n";
+        #$codtda_z . " " . $concepto . " Importe " . $movcli_z["importe"] . "<br>\n";
         $yaexistemovcli = busca_movcli($datosmovcli_z);
         if(!$yaexistemovcli) {
             $nvomovto = agrega_movto($movcli_z, $codtda_z, $idpromotor, $idtda, $idusuario, $idconcepto);
