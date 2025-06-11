@@ -13,7 +13,6 @@
 
   define_timezone();
   //$miskeys_z = json_decode(file_get_contents("tokens.json"), true);
-  $factura_z = json_decode(file_get_contents('php://input'), true);
   //$misdatfiscal_z = json_decode(file_get_contents("datosfiscales.json"), true);
   $accion_z = "";
   if(isset($_POST['modo'])) {    $accion_z = $_POST['modo'];  }
@@ -35,6 +34,9 @@
   }
   if($accion_z == "EXPORTAR_MOVIMIENTOS_VENTA") {
     exportar_movimientos_venta();
+  }
+  if($accion_z == "EXPORTAR_FACTURA_VENTA") {
+    exportar_factura_venta();
   }
 
   
@@ -297,6 +299,105 @@
     echo $venta;
   }
 
+  function exportar_factura_venta() {
+    $body = file_get_contents('php://input');
+    $idventa = -1;
+    $codigo = "-1"; 
+    $cia = 1; // Por default, la cia es 1
+    if(isset($_GET['idventa']))   {    $idventa = $_GET['idventa'];  }
+    if(isset($_POST['idventa']))  {    $idventa = $_POST['idventa'];  }
+    if($body != "") {
+      $micond_z = json_decode($body, true);
+      if(array_key_exists("idventa", $micond_z)) { $idventa = $micond_z["idventa"]; }
+    }
+  	$conn=conecta_pdo();
+	  #echo $condiciones_z;
+	    $sql_z =  "select a.*, d.codigo, b.clave as usocfdi, c.clave as metodopago, 
+            e.rfc, e.email, f.clave as regimen
+            from facturas a 
+            left outer join usocfdi b on a.idusocfdi = b.id
+            left outer join metodopago c on a.idmetodopago = c.id
+            join ventas d on a.idventa = d.idventa
+            join clientes e on d.idcliente = e.id
+            left outer join regimenes f on e.idregimen = f.id
+            where a.idventa = :IDVENTA";
+		$sentencia = $conn->prepare($sql_z);
 
-  
+		#$sentencia=$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$sentencia->bindParam(":IDVENTA", $idventa, PDO::PARAM_INT );
+		$sentencia->execute();
+		$factura = $sentencia->fetch(PDO::FETCH_ASSOC);
+    $idfactura = $factura["id"];
+    $codigo = $factura["codigo"];
+    $subtotal = $factura["total"] - $factura["iva"];
+    $fac = array (
+            "id" => $idfactura,
+            "numero" => $factura["numero"],
+            "codigo" => $factura["codigo"],
+            "serie" => $factura["serie"],
+            "fecha" => $factura["fecha"],
+            "rfc" => $factura["rfc"],
+            "email" => $factura["email"],
+            "regimen" => $factura["regimen"],
+            "cvemetodopago" => $factura["metodopago"],
+            "cveusocfdi" => $factura["usocfdi"],
+            "subtotal" => $subtotal,
+            "iva" => $factura["iva"],
+            "total" => $factura["total"]
+    );
+
+
+	  $sql_z =  "select a.*
+            from renfac a 
+            where a.idfactura = :IDFACTURA order by conse";
+		$sentencia = $conn->prepare($sql_z);
+		$sentencia->bindParam(":IDFACTURA", $idfactura, PDO::PARAM_INT );
+		$sentencia->execute();
+		$result_z = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+    //echo json_encode($result_z);
+    $renglonesfac = array();
+    $ii_z = 0;
+    foreach($result_z as $renfac) {
+            $totren = $renfac["preciou"] + $renfac["iva"];
+
+            $mirenfac = array (
+                "id" => $ii_z++,
+                "codigo" => $renfac["codigo"],
+                "concepto" => $renfac["descri"],
+                "canti" => $renfac["canti"],
+                "preciolista" => $renfac["preciou"],
+                "precionormal" => $renfac["preciou"],
+                "preciou" => $totren,
+                "esmoto" => "",
+                "piva" => $renfac["piva"],
+                "linea" => "",
+                "esoferta" => "",
+                "factorvtacred" => "",
+                "tasadescto" => "",
+                "seriemotor" => "",
+                "pedimento" => "",
+                "aduana" => "",
+                "marca" => "",
+                "importe" => $renfac["importe"],
+                "iva" => $renfac["iva"],
+                "serie" => $renfac["serie"],
+                "folio" => $renfac["folio"],
+            );
+            array_push($renglonesfac, $mirenfac);
+    }
+    $exportar = array (
+      "modo" => "crear_cli_fac_capvtas",
+      "idcli" => $factura["idventa"],
+      "codigo" => $codigo,
+      "factura" => $fac,
+      "numrenglones" => count($renglonesfac),
+      "renglones" => $renglonesfac
+    );
+
+
+    $venta = json_encode($exportar);
+    echo $venta;
+  }
+
+
 ?>

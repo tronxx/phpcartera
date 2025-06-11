@@ -23,6 +23,9 @@
     echo agrega($midato["movcli"]);
   }
 
+  if($accion_z == "buscarMovclis") {
+    echo obtener_movclis($midato["idventa"]);
+  }
 
 function modifica($movcli) {
     // Validar datos de entrada
@@ -209,76 +212,27 @@ function agrega($movcli) {
     }
 }  
 
-
-  function xmodifica($movcli) {
-    $id = $movcli["id"];
-    $codpromotor = $movcli["cobratario"];
-    $promotor = busca_promotor($codpromotor);
-    $idpromotor = $promotor["id"];
-    $concepto = $movcli["concepto"];
-    $regconcepto = busca_concepto($concepto);
-    $idconcepto = $regconcepto["id"];
-    $importe = $movcli["importe"];
-    $idusuario = $movcli["iduser"];
-    $tipo = $movcli["tipopago"];
-    $idusuario  = $movcli["iduser"];
-    $idventa = $movcli["idventa"];
-    $miusuario = busca_usuario_by_id($idusuario);
-    $inicialesusuario = "";
-    if($miusuario) {
-        $inicialesusuario = $miusuario["iniciales"];
+function obtener_movclis($idventa) {
+    $conn = conecta_pdo();
+    if (!$conn) {
+        return json_encode(array("status" => false, "error" => "Error de conexión a la base de datos"));
+    }
+    $sql = "SELECT a.*, b.concepto, c.tda ,
+        (case tipopago when 'AB' then recobon else null end) as bonifica,
+        (case tipopago when 'AR' then recobon else null end) as recargo
+        FROM movclis a 
+        left outer join conceptos b on a.idconcepto = b.id 
+        left outer join codigoscaja c on a.idpoliza = c.id
+        WHERE idventa = :IDVENTA order by fecha, consecutivo";
+    $sentencia = $conn->prepare($sql);
+    $sentencia->bindParam(':IDVENTA', $idventa, PDO::PARAM_INT);
+    if (!$sentencia->execute()) {
+        throw new Exception("Error al obtener movimientos: " . implode(", ", $sentencia->errorInfo()));
     }
 
-
-    $conn=conecta_pdo();
-    $sql_z = "select * from movclis where id = :ID"; 
-    $buscli = $conn->prepare($sql_z);
-    $buscli->bindParam(':ID', $id, PDO::PARAM_INT);
-    $resbuscli = $buscli->execute();
-    $resbuscli = $buscli->fetch(PDO::FETCH_ASSOC);
-    if(!$resbuscli) {
-      return json_encode(array("status" => false, "error" => "Id inexistente"));
-      exit ();
-    }
-    $antimporte = $resbuscli["importe"];
-    echo "Movimiento anterior: " . json_encode($resbuscli) . "<br>\n";
-
-
-    $conn=conecta_pdo();
-    $sql_z = "update movclis set idconcepto = :IDCONCEPTO, fecha = :FECHA,
-      tipopago = :TIPO, cobratario = :PROMOTOR, idcobratario = :IDPROMOTOR, 
-      importe = :IMPORTE, recobon = :ROB,
-      usuario = :USUARIO, idusuario = :IDUSUARIO where movclis.id = :ID";
-    echo "SQL: " . $sql_z . "<br>\n";
-    $sentencia = $conn->prepare($sql_z);
-    $sentencia->bindParam(':FECHA', $fecha, PDO::PARAM_STR);
-    $sentencia->bindParam(':IDCONCEPTO', $idconcepto, PDO::PARAM_INT);
-    $sentencia->bindParam(':TIPO', $tipo, PDO::PARAM_STR);
-    $sentencia->bindParam(':PROMOTOR', $promotor, PDO::PARAM_STR);
-    $sentencia->bindParam(':IDPROMOTOR', $idpromotor, PDO::PARAM_INT);
-    $sentencia->bindParam(':IMPORTE', $importe, PDO::PARAM_STR);
-    $sentencia->bindParam(':ROB', $improb, PDO::PARAM_STR);
-    $sentencia->bindParam(':USUARIO', $inicialesusuario, PDO::PARAM_STR);
-    $sentencia->bindParam(':IDUSUARIO', $idusuario, PDO::PARAM_INT);
-    $sentencia->bindParam(':ID', $id, PDO::PARAM_INT);
-    $resultado = $sentencia->execute();
-    $statusmov = $resultado;
-    if(!$resultado) { $errormov = $sentencia->errorInfo(); }
-
-    if($importe != $antimporte) {
-        $sqlupdtvta_z = "update ventas set abonos = abonos + (:IMPORTE - :ANTIMPORTE) where idventa = :IDVENTA";
-        $sentenciaupdtvta = $conn->prepare($sqlupdtvta_z);
-        $sentenciaupdtvta->bindParam(':IMPORTE', $importe, PDO::PARAM_STR);
-        $sentenciaupdtvta->bindParam(':ANTIMPORTE', $antimporte, PDO::PARAM_STR);
-        $sentenciaupdtvta->bindParam(':IDVENTA', $idventa, PDO::PARAM_INT);
-        $resultupdtvta = $sentenciaupdtvta->execute();    
-        if(!$resultupdtvta) { $error = $sentenciaupdtvta->errorInfo(); }
-    }
-    if(!$statusmov) {
-        return json_encode(array("status" => false, "error" => $errormov[2]));
-    } else {
-        return json_encode(array("status" => true, "idmovto" => $statusmov));
-    }
-  }
+    $resultados = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+    return json_encode($resultados);
+    $conn = null;
+}   
 
 ?>
