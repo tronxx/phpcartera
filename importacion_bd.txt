@@ -1,0 +1,54 @@
+Para crear la base de datos Inicial
+
+1.- Crear las tablas
+
+En Linux
+cd capycon/mysql_a_solid/exporta_a_mysql/tablastmp/
+2.- Importar Vendedores
+
+insvendedor.bat
+genera dd3.txt
+
+3.- importar anuscartera
+./insanucartera.bat
+genera dd3.txt
+
+4.- importar carteras de corto y largo plazo
+inscarcorlarpzo.bat
+genera dd3.txt
+
+inscarcorlarpzodet.bat
+genera dd3.txt
+
+5.- Importar cartas de promocion
+inscartaprom.bat
+genera dd3.txt
+
+6.- Importar ciudades
+insciudad.bat
+genera dd3.txt
+
+7.- Importar Códigos de Caja
+inscodcartera.bat
+genera dd3.txt
+
+8.- Importar Promotores
+inspromotor.bat
+genera dd3.txt
+
+9.- Importar Ubicaciones de Ventas
+insubivta.bat
+genera dd3.txt
+
+10.- Importar Uso cfdi
+insusocfdi.bat
+genera dd3.txt
+
+11.- Importar Vendedores
+insvendedor.bat
+genera dd3.txt
+
+12.- Importar Zonas
+inszonas.bat
+genera dd3.txt
+

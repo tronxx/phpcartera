@@ -25,6 +25,19 @@ function obtenerNumeroAntesDeBarra($cadena) {
     return $resultado;
   }
 
+  function busca_idventa($codigo) {
+    $cia = 1;
+    $conn=conecta_pdo();
+    $sql_z =  "select idventa from ventas where codigo = :CODIGO and cia = :CIA ";
+    $sentencia = $conn->prepare($sql_z);
+    $sentencia->bindParam(':CODIGO', $codigo, PDO::PARAM_STR);
+    $sentencia->bindParam(':CIA', $cia, PDO::PARAM_INT);
+    $sentencia->execute();
+    $resultado = $sentencia->fetch(PDO::FETCH_ASSOC);
+    return $resultado;
+  }
+
+
   function busca_usuario($codigo) {
     $cia = 1;
     $conn=conecta_pdo();
@@ -161,5 +174,42 @@ function obtenerNumeroAntesDeBarra($cadena) {
     $resultado = $sentencia->fetch(PDO::FETCH_ASSOC);
     return $resultado;
   } 
+
+  function busca_datosolicitud($concepto) {
+    $conn = conecta_pdo();
+    
+    // Primero intentamos encontrar el concepto
+    $sql = "SELECT * FROM datosolicitud WHERE concepto = :CONCEPTO";
+    $sentencia = $conn->prepare($sql);
+    $sentencia->bindParam(':CONCEPTO', $concepto, PDO::PARAM_STR);
+    $sentencia->execute();
+    
+    $resultado = $sentencia->fetch(PDO::FETCH_ASSOC);
+    
+    if($resultado) {
+        return $resultado;
+    }
+    
+    // Si no existe, intentamos insertarlo
+    try {
+        $sql = "INSERT INTO datosolicitud(concepto) VALUES (:CONCEPTO)";
+        $sentencia = $conn->prepare($sql);
+        $sentencia->bindParam(':CONCEPTO', $concepto, PDO::PARAM_STR);
+        $sentencia->execute();
+        
+        $idconcepto = $conn->lastInsertId();
+        return array("id" => $idconcepto, "concepto" => $concepto);
+    } catch (PDOException $e) {
+        // Si falla por duplicado (cuando otro proceso lo insertó primero)
+        if($e->errorInfo[1] == 1062) { // Código de error para duplicado en MySQL
+            // Volvemos a buscar
+            $sentencia = $conn->prepare("SELECT * FROM datosolicitud WHERE concepto = :CONCEPTO");
+            $sentencia->bindParam(':CONCEPTO', $concepto, PDO::PARAM_STR);
+            $sentencia->execute();
+            return $sentencia->fetch(PDO::FETCH_ASSOC);
+        }
+        throw $e; // Relanzamos otras excepciones
+    }
+  }  
 
 ?>

@@ -1,0 +1,21 @@
+Proceso para Exportar ventas
+
+1.- Procesa los datos que se exportan
+./enviaventas.bat IDCLI
+# El idcli es obviamente el id de la ventas
+
+./importaventas.bat
+toma los datos exportados y los agrega en altas
+
+
+--------------------------------------------------
+Para exportar ventas desde solid a mysql
+Primero se generan las ventas
+./importafechas.bat FECHAINICIAL FECHAFINAL CODIGOINICIAL CODIGOFINAL
+
+Para exportar las pólizas desde Solid a Mysql
+Se va a generar una póliza de cobranza, esta a su vez va a generar
+una lista de clientes que se van a importar para asegurar que existan
+las ventas que son afectadas en esa póliza
+
+./exportapol.bat FECHA CODIGOPOLIZA

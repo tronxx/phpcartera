@@ -38,6 +38,11 @@
   if($accion_z == "EXPORTAR_FACTURA_VENTA") {
     exportar_factura_venta();
   }
+if($accion_z == "EXPORTAR_SOLCITUD_VENTA") {
+    exportar_solicitud_venta();
+  }
+
+  
 
   
   function exportar_vendedores_venta() {
@@ -102,19 +107,25 @@
       e.precon, e.piva, e.descuento, 
       a.*,
       c.ciudad,
-      appat, apmat, nompil1, nompil2
+      appat, apmat, nompil1, nompil2,
+      h.concepto as tarjetatc,
       from ventas e
       join clientes a on e.idcliente = a.id
       left outer join ciudades c on a.idciudad = c.id
       left outer join nombres d on a.idnombre = d.id
       left outer join ubivtas f on e.idtienda = f.id
       left outer join promotores g on e.idpromotor = g.id
+      left outer join solicitudes i on e.idventa = i.idcliente and i.tipo = :TIPOVTA
+      and i.iddato = :TIPOTC
+      left outer join datosolicitud h on e.idconcepto = h.iddatosolicitud
       where e.idventa = :IDVENTA or ( a.codigo = :CODIGO and a.cia = :CIA) ";
 		$sentencia = $conn->prepare($sql_z);
 
 		#$sentencia=$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		$sentencia->bindParam(":CODIGO", $codigo, PDO::PARAM_STR );
 		$sentencia->bindParam(":IDVENTA", $idventa, PDO::PARAM_INT );
+		$sentencia->bindParam(":TIPOVTA", $tipovta, PDO::PARAM_INT );
+		$sentencia->bindParam(":TIPOTC", $tipotc, PDO::PARAM_INT );
 		$sentencia->bindParam(":CIA", $cia, PDO::PARAM_INT );
 		$sentencia->execute();
 		$result_z = $sentencia->fetch(PDO::FETCH_ASSOC);
@@ -313,13 +324,14 @@
   	$conn=conecta_pdo();
 	  #echo $condiciones_z;
 	    $sql_z =  "select a.*, d.codigo, b.clave as usocfdi, c.clave as metodopago, 
-            e.rfc, e.email, f.clave as regimen
+            e.rfc, e.email, f.clave as regimen, g.concepto as uuid
             from facturas a 
             left outer join usocfdi b on a.idusocfdi = b.id
             left outer join metodopago c on a.idmetodopago = c.id
             join ventas d on a.idventa = d.idventa
             join clientes e on d.idcliente = e.id
             left outer join regimenes f on e.idregimen = f.id
+            left outer join datosolicitud g on a.iduuid = g.id
             where a.idventa = :IDVENTA";
 		$sentencia = $conn->prepare($sql_z);
 
@@ -341,6 +353,7 @@
             "regimen" => $factura["regimen"],
             "cvemetodopago" => $factura["metodopago"],
             "cveusocfdi" => $factura["usocfdi"],
+            "uuid" => $factura["uuid"] ?? "",
             "subtotal" => $subtotal,
             "iva" => $factura["iva"],
             "total" => $factura["total"]
@@ -392,6 +405,98 @@
       "factura" => $fac,
       "numrenglones" => count($renglonesfac),
       "renglones" => $renglonesfac
+    );
+
+
+    $venta = json_encode($exportar);
+    echo $venta;
+  }
+
+
+  function exportar_solicitud_venta() {
+    $body = file_get_contents('php://input');
+    $idventa = -1;
+    $codigo = "-1"; 
+    $cia = 1; // Por default, la cia es 1
+    if(isset($_GET['idventa']))   {    $idventa = $_GET['idventa'];  }
+    if(isset($_POST['idventa']))  {    $idventa = $_POST['idventa'];  }
+    if($body != "") {
+      $micond_z = json_decode($body, true);
+      if(array_key_exists("idventa", $micond_z)) { $idventa = $micond_z["idventa"]; }
+    }
+  	$conn=conecta_pdo();
+		# echo $condiciones_z;
+		$sql_z =  "select a.codigo from ventas a where a.idventa = :IDVENTA";
+		$sentencia = $conn->prepare($sql_z);
+		#$sentencia=$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$sentencia->bindParam(":IDVENTA", $idventa, PDO::PARAM_INT );
+		$sentencia->execute();
+		$result_z = $sentencia->fetch(PDO::FETCH_ASSOC);
+    $codigo = $result_z["codigo"];
+    if (is_null($codigo)) { $codigo = ""; }
+    //echo "Codigo: " . $codigo . "\n";
+    // Ahora, buscamos los datos de la solicitud  
+
+
+		$sql_z =  "select a.iddato, b.concepto from solicitudes a 
+      join datosolicitud b on a.iddatosolicitud = b.id
+      where a.idcliente = :IDVENTA order by a.iddato";
+		$sentencia = $conn->prepare($sql_z);
+		#$sentencia=$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$sentencia->bindParam(":IDVENTA", $idventa, PDO::PARAM_INT );
+		$sentencia->execute();
+		$result_z = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+    $datosIndexados = [];
+    foreach ($result_z as $fila) {
+      $iddato = $fila['iddato'];
+      $datosIndexados[$iddato] = $fila['concepto'];
+    }
+    $solicitud = array(
+      "sexo" => $datosIndexados["135"] ?? "",
+      "edad" => $datosIndexados["140"] ?? "",
+      "estadocivil" => $datosIndexados["145"] ?? "",
+      "dependientes" => $datosIndexados["165"] ?? "",
+      "ocupacion" => $datosIndexados["5"] ?? "",
+      "ingresos" => $datosIndexados["130"] ?? "",
+      "trabajo" => $datosIndexados["10"] ?? "",
+      "telefono" => $datosIndexados["15"] ?? "",
+      "direcciontrabajo" => $datosIndexados["20"] ?? "",
+      "antiguedad" => $datosIndexados["150"] ?? "",
+      "conyuge" => $datosIndexados["25"] ?? "",
+      "ocupacionconyuge" => $datosIndexados["30"] ?? "",
+      "trabajoconyuge" => $datosIndexados["135"] ?? "",
+      "telefonoconyuge" => $datosIndexados["150"] ?? "",
+      "direcciontrabconyuge" =>  $datosIndexados["35"] ?? "",
+      "ingresosconyuge" => "0",
+      "antiguedadconyuge" =>  $datosIndexados["175"] ?? "",
+      "aval" =>  $datosIndexados["50"] ?? "",
+      "ocupacionaval" =>  $datosIndexados["60"] ?? "",
+      "trabajoaval" =>  $datosIndexados["70"] ?? "",
+      "telefonoaval" =>  $datosIndexados["65"] ?? "",
+      "directrabaval" =>   $datosIndexados["70"] ?? "",
+      "ingresosaval" =>  $datosIndexados["180"] ?? "",
+      "antiguedadaval" =>  $datosIndexados["155"] ?? "",
+      "conyugeaval" =>  $datosIndexados["105"] ?? "",
+      "ocupacionconyugeaval" =>  $datosIndexados["110"] ?? "",
+      "trabajoconyugeaval" =>  $datosIndexados["115"] ?? "",
+      "telconyugeaval" =>   $datosIndexados["120"] ?? "",
+      "direcciontrabajoconyugeaval" =>  $datosIndexados["125"] ?? "",
+      "ingresosconyugeaval" =>  $datosIndexados["170"] ?? "",
+      "antiguedadconyugeaval" =>  $datosIndexados["100"] ?? "",
+      "familiar" =>  $datosIndexados["100"] ?? "",
+      "direccionfamiliar" =>  $datosIndexados["95"] ?? "",
+      "conocido" =>  $datosIndexados["75"] ?? "",
+      "direccionconocido" =>  $datosIndexados["85"] ?? "",
+      "referencia1" =>  $datosIndexados["500"] ?? "", 
+      "referencia1a" =>  $datosIndexados["505"] ?? "",
+      "referencia2" =>  $datosIndexados["510"] ?? "",
+      "observaciones" =>  $datosIndexados["515"] ?? "",
+    );
+    $exportar = array (
+      "modo" => "grabar_solicitud",
+      "numcli" => $codigo,
+      "solicitud" => $solicitud
     );
 
 

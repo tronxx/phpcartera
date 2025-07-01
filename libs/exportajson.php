@@ -57,7 +57,7 @@
       "email" => $micliente["email"],
       "diacum" => "01",
       "mescum" => "01",
-      "tarjetatc" => "",
+      "tarjetatc" => $micliente["tarjetatc"],
     );
     $resultado = json_encode($cliente);
     return ($resultado);
@@ -66,17 +66,17 @@
 
   function exporta_aval($mijson) {
     $micliente = json_decode($mijson, true); 
-    $nombre = $micliente["nombre"] . " . . .";
+    $nombre = $micliente["nombre"];
     $nombreaval = explode(" ", $nombre);
     $dirav1 = $micliente["calle"] . " " . $micliente["numpredio"] . " " . $micliente["colonia"];
     $dirav2 = $micliente["ciudad"] . " " . $micliente["codpostal"];
     if (is_null($dirav1)) { $dirav1 = ""; }
     if (is_null($dirav2)) { $dirav2 = ""; }
     $aval = array (
-      "appat" => $nombreaval[0],
-      "apmat" => $nombreaval[1],
-      "nompil1" => $nombreaval[2],
-      "nompil2" => $nombreaval[3],
+      "appat" => $nombreaval[0] ?? "",
+      "apmat" => $nombreaval[1] ?? "",
+      "nompil1" => $nombreaval[2] ?? "",
+      "nompil2" => $nombreaval[3] ?? "",
       "dirav1" => trim($dirav1),
       "dirav2" => trim($dirav2)
     );

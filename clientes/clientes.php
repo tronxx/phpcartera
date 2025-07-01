@@ -36,6 +36,13 @@
   if($accion_z == "EXPORTAR_MOVIMIENTOS_VENTA") {
     exportar_movimientos_venta();
   }
+  if($accion_z == "IMPORTAR_DIAS_GRACIA") {
+    importar_dias_gracia();
+  }
+
+  if($accion_z == "IMPORTAR_CLIENTES_TC") {
+    importar_tc_cliente();
+  }
 
   
   function exportar_vendedores_venta() {
@@ -201,15 +208,15 @@
 		#$sentencia=$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		$sentencia->bindParam(":CODIGO", $codigo, PDO::PARAM_STR );
 		$sentencia->bindParam(":APPAT", $appat, PDO::PARAM_STR );
-        $sentencia->bindParam(":APMAT", $apmat, PDO::PARAM_STR );
-        $sentencia->bindParam(":NOMBRE1", $nombre1, PDO::PARAM_STR );
-        $sentencia->bindParam(":NOMBRE2", $nombre2, PDO::PARAM_STR );
-        $sentencia->bindParam(":RFC", $rfc, PDO::PARAM_STR );
-        $sentencia->bindParam(":CODPOST", $codpost, PDO::PARAM_STR );
+    $sentencia->bindParam(":APMAT", $apmat, PDO::PARAM_STR );
+    $sentencia->bindParam(":NOMBRE1", $nombre1, PDO::PARAM_STR );
+    $sentencia->bindParam(":NOMBRE2", $nombre2, PDO::PARAM_STR );
+    $sentencia->bindParam(":RFC", $rfc, PDO::PARAM_STR );
+    $sentencia->bindParam(":CODPOST", $codpost, PDO::PARAM_STR );
 		$sentencia->bindParam(":IDCIUDAD", $idciudad, PDO::PARAM_INT);
-        $sentencia->bindParam(":CIA", $cia, PDO::PARAM_INT);
+    $sentencia->bindParam(":CIA", $cia, PDO::PARAM_INT);
 		$sentencia->execute();
-        $result["id"]= $conn->lastInsertId();
+    $result["id"]= $conn->lastInsertId();
 		return (json_encode($result));
   }
 
@@ -297,6 +304,133 @@
     echo $venta;
   }
 
+  function importar_dias_gracia() {
+    $body = file_get_contents('php://input');
+    $micond_z = json_decode($body, true);
+    $clientes = $micond_z["clientes"];
+    $resultados = array();
+    foreach($clientes as $cliente) {
+      array_push($resultados, json_decode(agregar_dias_gracia($cliente)) ) ;
+    }
+    echo json_encode($resultados);
+  }
+   
+  function agregar_dias_gracia($cliente) {
+    $idventa = -1;
+    $diasgracia = 0;
+    $codigo = "-1";
+    if(array_key_exists("diasgracia", $cliente)) { $diasgracia = $cliente["diasgracia"]; }
+    if(array_key_exists("numcli", $cliente)) { $codigo = $cliente["numcli"]; }
+    if($diasgracia < 1) {
+      return (json_encode(array("success" => "Días de gracia cero no se graban.")));
+    }
+    $codigo = $cliente["numcli"];
+    $datosventa = busca_idventa($codigo);
+    $idventa = $datosventa["idventa"];
+    $tipodiasgracia = 810;
+
+    $datosolicitud = array(
+      "concepto" => $diasgracia,
+      "codigo" => $codigo,
+      "tipoventa" => 3, // Tipo de venta para días de gracia
+      "tipodatosolicitud" => $tipodiasgracia, // Tipo de datosolicitud para días de gracia
+      "idventa" => $cliente["idventa"],
+    );
+    return (agrega_datosolicitud($datosolicitud));
+
+  }
+
+  function importar_tc_cliente() {
+    $body = file_get_contents('php://input');
+    $micond_z = json_decode($body, true);
+    $clientes = $micond_z["clientes"];
+    $resultados = array();
+    foreach($clientes as $cliente) {
+      array_push($resultados, json_decode(agregar_tc_cliente($cliente)) ) ;
+    }
+    echo json_encode($resultados);
+  }
+
+  function agregar_tc_cliente ($cliente) {
+    $idventa = -1;
+    $clavetc = 0;
+    $idventa = -1;
+    $codigo = "-1";
+    if(array_key_exists("clavetc", $cliente)) { $clavetc = $cliente["clavetc"]; }
+    if(array_key_exists("idcli", $cliente)) { $idventa = $cliente["idcli"]; }
+    if(array_key_exists("codigo", $cliente)) { $codigo = $cliente["codigo"]; }
+    $tipotc = 630;
+    $mitc = explode(" ", trim($clavetc));
+    $miclavetc = $mitc[1];
+    $ii = 0;
+    $datosolicitud = array(
+      "concepto" => $miclavetc,
+      "codigo" => $codigo,
+      "tipoventa" => 3, // Tipo de venta para días de gracia
+      "tipodatosolicitud" => $tipotc, // Tipo de datosolicitud para días de gracia
+      "idventa" => $idventa,
+    );
+    return (agrega_datosolicitud($datosolicitud));
+
+  }
+
+
+  function agrega_datosolicitud($datosolicitud) {
+    $conn=conecta_pdo();
+    $concepto = $datosolicitud["concepto"];
+    $idventa = $datosolicitud["idventa"];
+    $tipoventa = $datosolicitud["tipoventa"];
+    $tipodatosolicitud = $datosolicitud["tipodatosolicitud"];
+
+  	$conn=conecta_pdo();
+    $cia = 1;
+    $datoconcepto = busca_datosolicitud($concepto);
+    $idconcepto = $datoconcepto["id"];
+
+    $sql_z = "select * from solicitudes where idcliente = :IDVENTA and tipo = :TIPOVTA and iddato = :TIPODATOSOL and cia = :CIA";
+    $sentencia = $conn->prepare($sql_z);
+		$sentencia->bindParam(":IDVENTA", $idventa, PDO::PARAM_INT );
+		$sentencia->bindParam(":TIPOVTA", $tipoventa, PDO::PARAM_INT );
+		$sentencia->bindParam(":TIPODATOSOL", $tipodatosolicitud, PDO::PARAM_INT );
+		$sentencia->bindParam(":CIA", $cia, PDO::PARAM_INT );
+		$sentencia->execute();
+		$result_z = $sentencia->fetch(PDO::FETCH_ASSOC);
+    $sql_z = "insert into solicitudes (idcliente, tipo, iddato, iddatosolicitud, cia, status) 
+      values (:IDVENTA, :TIPOVTA, :TIPODATOSOL, :IDDATOSOLICITUD, :CIA, 'A')";
+
+    if($result_z) {
+      $idsolicitud = $result_z["id"];
+      $sql_z = "update solicitudes set  iddatosolicitud = :IDDATOSOLICITUD where  id = :IDSOLICITUD";
+      $sentencia = $conn->prepare($sql_z);
+      $sentencia->bindParam(":IDSOLICITUD", $idsolicitud, PDO::PARAM_INT );
+      $sentencia->bindParam(":IDDATOSOLICITUD", $idconcepto, PDO::PARAM_INT );
+      $sentencia->execute();
+
+    } else {
+      $sql_z = "insert into solicitudes (idcliente, tipo, iddato, iddatosolicitud, cia, status) 
+      values (:IDVENTA, :TIPOVTA, :TIPODATOSOL, :IDDATOSOLICITUD, :CIA, 'A')";
+      $sentencia = $conn->prepare($sql_z);
+      $sentencia->bindParam(":IDVENTA", $idventa, PDO::PARAM_INT );
+      $sentencia->bindParam(":TIPOVTA", $tipoventa, PDO::PARAM_INT );
+      $sentencia->bindParam(":TIPODATOSOL", $tipodatosolicitud, PDO::PARAM_INT );
+      $sentencia->bindParam(":IDDATOSOLICITUD", $idconcepto, PDO::PARAM_INT );
+      $sentencia->bindParam(":CIA", $cia, PDO::PARAM_INT );
+      $sentencia->execute();
+      $idsolicitud = $conn->lastInsertId();
+
+    }
+    return (
+      json_encode(
+          array("id" => $idsolicitud, 
+          "idcliente" => $idventa,
+          "iddato" => $tipodatosolicitud,
+          "iddatosolicitud" => $idconcepto,
+          "status" => "A",
+          "cia" => $cia,
+        )
+      )
+    );
+  }
 
   
 ?>
