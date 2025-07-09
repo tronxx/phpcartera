@@ -362,6 +362,7 @@
     $tipotc = 630;
     $mitc = explode(" ", trim($clavetc));
     $miclavetc = $mitc[1];
+    # echo "Clave TC: " . $miclavetc . "\n";
     $ii = 0;
     $datosolicitud = array(
       "concepto" => $miclavetc,

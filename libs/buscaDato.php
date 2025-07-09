@@ -177,6 +177,7 @@ function obtenerNumeroAntesDeBarra($cadena) {
 
   function busca_datosolicitud($concepto) {
     $conn = conecta_pdo();
+    $cia = 1; // Asignamos un valor por defecto a la compañía, si es necesario
     
     // Primero intentamos encontrar el concepto
     $sql = "SELECT * FROM datosolicitud WHERE concepto = :CONCEPTO";
@@ -192,9 +193,10 @@ function obtenerNumeroAntesDeBarra($cadena) {
     
     // Si no existe, intentamos insertarlo
     try {
-        $sql = "INSERT INTO datosolicitud(concepto) VALUES (:CONCEPTO)";
+        $sql = "INSERT INTO datosolicitud(concepto, cia) VALUES (:CONCEPTO, :CIA)";
         $sentencia = $conn->prepare($sql);
         $sentencia->bindParam(':CONCEPTO', $concepto, PDO::PARAM_STR);
+        $sentencia->bindParam(':CONCEPTO', $cia, PDO::PARAM_INT);
         $sentencia->execute();
         
         $idconcepto = $conn->lastInsertId();

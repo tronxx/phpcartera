@@ -52,3 +52,6 @@ genera dd3.txt
 inszonas.bat
 genera dd3.txt
 
+12.- Importar Regímenes
+insregimen.bat
+genera dd3.txt
