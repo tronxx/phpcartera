@@ -231,6 +231,14 @@ function obtener_movclis($idventa) {
     }
 
     $resultados = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+    $primerren = $resultados[0] ?? null;
+    $primerren["id"] = -1;
+    $primerren["concepto"] = "COMPRA";
+    $primerren["coa"] = "C";
+    $primerren["importe"] = 0;
+    $primerren["bonifica"] = 0;
+
+    array_unshift($resultados, $primerren);
     return json_encode($resultados);
     $conn = null;
 }   

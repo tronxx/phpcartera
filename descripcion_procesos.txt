@@ -19,3 +19,9 @@ una lista de clientes que se van a importar para asegurar que existan
 las ventas que son afectadas en esa póliza
 
 ./exportapol.bat FECHA CODIGOPOLIZA
+
+--------------------------------------------------------------
+Instalar mysql php
+sudo apt-get install php-mysql
+
+No olvides que la BD está en reversa
