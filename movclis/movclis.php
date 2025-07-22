@@ -57,7 +57,7 @@ function modifica($movcli) {
         $importe = $movcli["importe"];
         $idusuario = $movcli["iduser"];
         $tipo = $movcli["tipopago"];
-        $fecha = $movcli["fecha"];
+        $fecha = explode("T", $movcli["fecha"])[0] ;
         $recobon = $movcli["recobon"];
 
         $miusuario = busca_usuario_by_id($idusuario);
@@ -151,7 +151,7 @@ function agrega($movcli) {
         $importe = $movcli["importe"];
         $idusuario = $movcli["iduser"];
         $tipo = $movcli["tipopago"];
-        $fecha = $movcli["fecha"];
+        $fecha = explode("T", $movcli["fecha"])[0] ;
         $recobon = $movcli["recobon"];
         $coa = 'A';
 
