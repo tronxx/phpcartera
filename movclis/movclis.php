@@ -231,6 +231,28 @@ function obtener_movclis($idventa) {
     }
 
     $resultados = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+    $sql = "select b.* from facturas a 
+        left outer join renfac b on a.id = b.idfactura
+        where a.idventa = :IDVENTA order by b.conse";
+    $sentencia = $conn->prepare($sql);
+    $sentencia->bindParam(':IDVENTA', $idventa, PDO::PARAM_INT);
+    if (!$sentencia->execute()) {
+        throw new Exception("Error al obtener compra: " . implode(", ", $sentencia->errorInfo()));
+    }
+    $resultados2 = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+    $compra = "";
+    foreach ($resultados2 as $renfac) {
+        $compra .=  $renfac["descri"];
+        if(strlen($renfac["serie"])  > 0) {
+            $compra .= " S/" . $renfac["serie"];
+        }
+        if(($renfac["folio"])  > 0) {
+            $compra .= " #" . $renfac["folio"];
+        }
+
+    }
+
     $primerren = $resultados[0] ?? null;
     $primerren["id"] = -1;
     $primerren["concepto"] = "COMPRA";
