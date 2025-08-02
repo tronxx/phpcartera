@@ -255,7 +255,7 @@ function obtener_movclis($idventa) {
 
     $primerren = $resultados[0] ?? null;
     $primerren["id"] = -1;
-    $primerren["concepto"] = "COMPRA";
+    $primerren["concepto"] = $compra;
     $primerren["coa"] = "C";
     $primerren["importe"] = 0;
     $primerren["bonifica"] = 0;
