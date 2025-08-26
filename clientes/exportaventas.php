@@ -108,9 +108,9 @@ if($accion_z == "EXPORTAR_SOLCITUD_VENTA") {
       a.*,
       c.ciudad,
       appat, apmat, nompil1, nompil2,
-      h.concepto as tarjetatc,
+      h.concepto as tarjetatc
       from ventas e
-      join clientes a on e.idcliente = a.id
+      left outer join clientes a on e.idcliente = a.id
       left outer join ciudades c on a.idciudad = c.id
       left outer join nombres d on a.idnombre = d.id
       left outer join ubivtas f on e.idtienda = f.id

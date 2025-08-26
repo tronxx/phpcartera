@@ -232,6 +232,17 @@ function obtener_movclis($idventa) {
 
     $resultados = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
+    $sql = "select * from ventas a 
+        where a.idventa = :IDVENTA";
+    $sentencia = $conn->prepare($sql);
+    $sentencia->bindParam(':IDVENTA', $idventa, PDO::PARAM_INT);
+    if (!$sentencia->execute()) {
+        throw new Exception("Error al obtener compra: " . implode(", ", $sentencia->errorInfo()));
+    }
+    $resultados2 = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+    $fechavta = $resultados2[0]["fecha"] ?? date("Y-m-d");
+
+
     $sql = "select b.* from facturas a 
         left outer join renfac b on a.id = b.idfactura
         where a.idventa = :IDVENTA order by b.conse";
@@ -255,6 +266,7 @@ function obtener_movclis($idventa) {
 
     $primerren = $resultados[0] ?? null;
     $primerren["id"] = -1;
+    $primerren["fecha"] = $fechavta;
     $primerren["concepto"] = $compra;
     $primerren["coa"] = "C";
     $primerren["importe"] = 0;

@@ -1,0 +1,53 @@
+<table style="width: 100%; border: 1px solid #000;">
+    <tr>        
+        <td>
+            <table style="width: 100%;">
+                <tr>
+                    <td>Código </td>
+                    <td>{{datoscli.codigo}}</td>
+                    <td>Letra 1/1 {{datoscli.letra1}}</td>
+                    <td>Servicio {{datoscli.servicio}}</td>
+                    <td>Opcion {{datoscli.opcion}}</td>
+                    <td>Descto {{datoscli.descto}}</td>
+                </tr>
+                <tr>
+                    <td>Nombre</td>
+                    <td colspan="2">{{datoscli.nombre}}</td>
+                    <td>Enganche {{datoscli.enganche}}</td>
+                    <td>Contado {{datoscli.contado}}</td>
+                    <td>Iva {{datoscli.piva}} %</td>
+                </tr>
+                <tr>
+                    <td>Dirección</td>
+                    <td colspan="2">{{datoscli.direccion}}</td>
+                    <td>Letras {{datoscli.nulets}} QOM {{datoscli.qom}}</td>
+                    <td>Importe por Letra {{datoscli.canle}}</td>
+                    <td>Bonificacion {{datoscli.bonifi}}</td>
+                    <td>M.U.B {{datoscli.mub}}</td>
+                </tr>
+                <tr>
+                    <td>Población</td>
+                    <td colspan="2">{{datoscli.ciudad}}</td>
+                    <td>Pto.Vta {{datoscli.ubica}}</td>
+                    <td>Factura {{datoscli.factura}}</td>
+                    <td>Tipo {{datoscli.ticte}}</td>
+                </tr>
+                {{datosaval}}
+                <tr>
+                    <td>Entrega</td>
+                    <td>{{datoscli.promotor}}</td>
+                    <td>Comisión {{datoscli.comisionpromotor}}</td>
+                    <td>Vendedor {{datoscli.vendedor}}</td>
+                    <td>Comisión {{datoscli.comision}}</td>
+                </tr>
+                <tr>
+                    <td>Compra</td>
+                    <td colspan="2">{{datoscli.compra}}</td>
+                    <td style="text-align: center;">Cargos {{datoscli.cargos}}</td>
+                    <td style="text-align: center;">Abonos {{datoscli.abonos}}</td>
+                    <td style="text-align: center;">Saldo {{datoscli.saldo}}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
