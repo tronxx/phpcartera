@@ -1,196 +1,192 @@
-<html><body>
-    <table><tr>
-        <td width="20%">        <font size ="-2">14-08-2025 04:36:51</font></td>
-        <td align="center"> <img src="../polizas/logo2.jpg"></td></tr></table>
-        <font size="8">
-            <table><tr>
-                <td ><h3>Estado de Cuenta 4225072501 LEDESMA ACOSTA CINDY</h3></td>
-            </tr>
-<tr>
-    <td >     
-        <table >
-
-            <tr>
-
-                <td>Código</td><td>4225072501 </td>
-
-                <td>Letra 1/1</td><td> 0.00</td>
-
-                <td>Servicio</td><td> 0.00</td>
-
-                <td>Opcion</td><td>  </td>
-
-                <td>% Descto</td><td> 0.00%</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Nombre</td><td colspan="2"> LEDESMA ACOSTA CINDY</td>
-
-                <td>Enganche</td><td> 0.00</td>
-
-                <td>Contado</td><td> 0.00</td>
-
-                <td>% Iva</td><td> 16.00</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Dirección</td><td> DOMICILIO CONOCIDO N.SNCENTRO97320</td>
-
-                <td>Letras</td><td> 0.00 QOM C</td>
-
-                <td>Importe por Letra</td><td> 0.00</td>
-
-                <td>Bonificacion</td><td> 0.00</td>
-
-                <td>M.U.B</td><td> 0.00</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Población</td><td> PROGRESO</td>
-
-                <td>Pto.Vta</td><td> PR</td>
-
-                <td>Factura</td><td> 9495 PRFA</td>
-
-                <td>Tipo</td><td> CC</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Aval</td><td> </td>
-
-                <td>Dir.Aval</td><td colspan="5">  </td>
-
-            </tr>
-
-            <tr>
-
-                <td>Entrega</td><td> CERVERA GARCIA WILBERTH</td>
-
-                <td>Comisión</td><td> 0.00</td>
-
-                <td>Vendedor</td><td> GUEMES FLORES ARIANNA BEATRIZ</td>
-
-                <td>Comisión</td><td> 29.00</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Compra</td></td><td colspan="3"> LAV.11K MABE LMDX1123HBAB0 2T # 7 S/24080421AMP1065 </td>
-
-                <td>Cargos</td><td align="right"> 3,400.00</td>
-
-                <td>Abonos</td><td align="right"> 0.00</td>
-
-                <td>Saldo</td><td  align="right"> 0.00</td>
-
-
-
-            </tr>
-
-        </table>
-
-       </td></tr>
-<tr><td ><table border="1">
-
-    <thead>
-
-        <tr>
-
-            <th width="10%" align="center">Fecha</th>
-
-            <th width="36%" align="center">Concepto</th>
-
-            <th width="4%" align="center">Tipo</th>
-
-            <th width="4%" align="center">Pz</th>
-
-            <th width="4%" align="center">Usr</th>
-
-            <th width="4%" align="center">Prm</th>
-
-            <th width="10%" align="center">Bonifica</th>
-
-            <th width="10%" align="center">Recargos</th>
-
-            <th width="10%" align="center">Importe</th>
-
-            <th width="10%" align="center">Saldo</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        <tr>
-
-    <td width="10%" >25-07-2025 </td>
-
-    <td width="36%" >LAV.11K MABE LMDX1123HBAB0 2T S/24080421AMP1065 # 7 </td>
-
-    <td width="4%" ></td>
-
-    <td width="4%" ></td>
-
-    <td width="4%" ></td>
-
-    <td width="4%" ></td>
-
-    <td width="10%" align="right"></td>
-
-    <td width="10%" align="right"></td>
-
-    <td width="10%" align="right">0.00</td>
-
-    <td width="10%" align="right">3,400.00</td> 
-
-
-
-</tr>
-
-<tr>
-
-    <td width="10%" >25-07-2025 </td>
-
-    <td width="36%" >CONTADO</td>
-
-    <td width="4%" >AB</td>
-
-    <td width="4%" ></td>
-
-    <td width="4%" >GFA</td>
-
-    <td width="4%" >TDA</td>
-
-    <td width="10%" align="right"></td>
-
-    <td width="10%" align="right"></td>
-
-    <td width="10%" align="right">3,400.00</td>
-
-    <td width="10%" align="right">0.00</td> 
-
-
-
-</tr>
-
-
-
-    </tbody>
-
-</table>
-
-</td></tr>
-</table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<body>
+
+<div class="container">
+    <div class="row">
+    <div class="col-sm-3"><label for="numventa">Código</label></div>
+    <div class="col-sm-3"><input type="text" [(ngModel)]="codigo"></div>
+    <div class="col-sm-9">
+        <div class="btn-group">
+    <button mat-raised-button color="primary" 
+    (click)="buscar_mi_venta()" type="button">
+        <mat-icon>search</mat-icon>
+        Detalles
+    </button>
+    <button mat-raised-button color="primary" 
+    (click)="buscar_por_nombre()" type="button">
+        <mat-icon>search</mat-icon>
+        Bucar por Nombre
+    </button>
+    <button class="espaciado.button" mat-raised-button color="primary" (click)="moverse_cliente('anterior')">
+        <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_left</mat-icon>
+        Anterior Cliente
+    </button>
+    <button class="espaciado.button" mat-raised-button color="primary" (click)="moverse_cliente('siguiente')">
+        <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_right</mat-icon>
+        Siguiente Cliente
+    </button>
+
+        </div>
+
+    </div>
+        
+    </div>
+
+</div>
+<div *ngIf="venta" >
+    <div class="row">
+        <div class="column-12" style="width: 40%;" >
+            <label for="nombre" >Nombre </label>
+            <input type="text" id="nombre" style="width: 60%;" [readOnly]="true" value="{{venta.nombre}}">
+        </div>
+        <div class="column-6" style="width: 20%;" >
+            <label for="ubica" >Ubicación</label>
+            <input type="text" id="ubica" style="width: 20%;" [readOnly]="true" value="{{venta.ubica}}">
+        </div>
+        <div class="column-6" style="width: 20%;" >
+            <label for="factura">Factura </label>
+            <input type="text" id="factura" style="width: 35%;"  [readOnly]="true" value="{{venta.seriefac}} {{venta.numfac}}">
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <label for="tipoventa" >Tipo de Venta </label>
+            <input type="text" id="tipoventa" style="width: 10%;"  [readOnly]="true" value="{{venta.ticte}}">
+            <div *ngIf="venta.ticte === 'TC'">
+                <input type="text" id="tartejatc" style="width: 40%;"  value="{{tarjetatc}}" [readOnly]="true">
+            </div>
+        </div>
+        <div class="col-6">
+            <label for="tipoventa" >Op</label>
+            <input type="text" id="tipoventa" style="width: 10%;"  [readOnly]="true" value="{{venta.opcion}}">
+        </div>
+        <div class="col-6">
+            <label for="qom">Q/M/C </label>
+            <input type="text" id="qom"  style="width: 10%;" [readOnly]="true" value="{{venta.qom}}">
+        </div>
+        <div class="col-6">
+            <label for="precon">P.Lista</label>
+            <input type="text" id="precon" [readOnly]="true" value="{{venta.precon | currency}}">
+        </div>
+        <div class="col-6">
+            <label for="descuento">Descuento</label>
+            <input type="text" id="descuento" style="width: 10%;" [readOnly]="true" value="{{venta.descto}}">
+        </div>
+        <div class="col-6">
+            <label for="servicio">Servicio</label>
+            <input type="text" id="servicio" style="width: 10%;" [readOnly]="true" value="{{venta.servicio}}">
+        </div>
+
+    </div>
+    <div *ngIf="escredito">
+        <div class="row">
+            <div class="col-6">
+                <label for="letras">letras </label>
+                <input type="text" id="letras" [readOnly]="true" value="{{venta.nulets}}">
+                <label for="precioxletra">Precio x Letra </label>
+                <input type="text" id="precioxletra" [readOnly]="true" value="{{venta.canle | currency}}">
+                <label for="bonifi">Bonificación </label>
+                <input type="text" id="bonifi" [readOnly]="true" value="{{venta.canle | currency}}">
+                <label for="sdoeng">Letra 1/1 </label>
+                <input type="text" id="sdoeng" [readOnly]="true" value="{{venta.letra1}}">
+                <label *ngIf = "diasgracia" for="diasgracia">Dias Gracia</label>
+                <input type="text" id="diasgracia" [readOnly]="true" value="{{diasgracia}}">
+            </div>
+
+        </div>
+        <div *ngIf="aval">
+            <div class="row">
+                <label for="nomreaval" >Aval Nombre</label>
+                <input type="text" id="nombreaval" [readOnly]="true" value="{{aval.nombre}}">
+                <label for="diraval" >Direccion</label>
+                <input type="text" id="diraval" [readOnly]="true" value="{{aval.calle}}">
+                <label for="pobaval" >Poblacion</label>
+                <input type="text" id="pobaval" [readOnly]="true" value="{{aval.ciudad}}">
+
+            </div>
+        </div>
+    
+    </div>
+    <div>
+        <label for="nombre">Cargos </label>
+        <input type="text" [readOnly]="true" value="{{venta.cargos | currency}}">
+        <label for="nombre">Abonos </label>
+        <input type="text" [readOnly]="true" value="{{venta.abonos | currency}}">
+        <label for="nombre">Saldo </label>
+        <input type="text" [readOnly]="true" [value]="(venta.cargos - venta.abonos) | currency">
+        
+    </div>
+    <div>
+        <label >Vendedor </label>
+        <input type="text" style="width: 10%;" [readOnly]="true" *ngIf="vendedor" [(ngModel)]="vendedor.codigo">
+        <label >Comision </label>
+        <input type="text"  style="width: 10%;" [readOnly]="true" value="{{venta.comision | currency}}">
+        <label >Entrega</label>
+        <input type="text" style="width: 10%;" [readOnly]="true" *ngIf="promotor" [(ngModel)]="promotor.codigo">
+        <label >Comision</label>
+        <input type="text" [readOnly]="true" style="width: 10%;" *ngIf="promotor" value="{{venta.comisionpromotor | currency}}">
+    </div>
+    <div style="width: 100%;">
+        <label >Compra:</label> 
+        <input type="text" style="width: 80%;" [readOnly]="true" [(ngModel)]="compras">
+        <label>{{venta.idventa}} </label>
+    </div>
+    <div style="width: 100%;">
+    </div>
+    <div style="width: 100%;">
+        <button mat-raised-button color="primary" 
+            type="button" (click)="imprime_letras()"> 
+            <mat-icon>print</mat-icon>
+            Impresión Letras
+        </button>
+        <button [disabled]="ventacerrada" mat-raised-button color="primary" 
+            type="button" (click)="cerrar_venta(venta.idventa)"> 
+            <mat-icon>lock</mat-icon>
+            <label *ngIf="ventacerrada"> Venta Cerrada {{fechacierre}}</label>
+            <label *ngIf="!ventacerrada"> Cerrar</label>
+        </button>
+        <button mat-raised-button color="primary" 
+            type="button" (click)="estadoCuenta()"> 
+            <mat-icon>print</mat-icon>
+            Estado de Cuenta
+        </button>
+        
+
+    </div>
+
+    <div style="width: 100%;">        
+        <mat-tab-group mat-align-tabs="start">
+            <div class="movtos">
+                <mat-tab label="Movimientos">
+                    <app-movimientostabla *ngIf="yatengomovclis" 
+                        [movimientos]="movclis" [idventa]="idventa" [cargoscli]="venta.cargos" [status]="statuscerrada">
+                    </app-movimientostabla>
+                </mat-tab>
+                <mat-tab label="Factura">
+                    <app-factura *ngIf="yatengofactura" [datosventa]="datosventa" [factura]="facturacompleta"></app-factura>
+                </mat-tab>
+                <mat-tab label="Solicitud">
+                    <app-solicitud-form  *ngIf="solicitudextendida && yatengosolicit"  [solicitudextendida]="solicitudextendida" [inicial] = "modo"></app-solicitud-form>
+                </mat-tab>
+                </div>
+        </mat-tab-group>
+
+    </div>
+
+</div>
+
+    
 </body>
 </html>
-

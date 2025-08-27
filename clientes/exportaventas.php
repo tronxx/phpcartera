@@ -117,7 +117,7 @@ if($accion_z == "EXPORTAR_SOLCITUD_VENTA") {
       left outer join promotores g on e.idpromotor = g.id
       left outer join solicitudes i on e.idventa = i.idcliente and i.tipo = :TIPOVTA
       and i.iddato = :TIPOTC
-      left outer join datosolicitud h on e.idconcepto = h.iddatosolicitud
+      left outer join datosolicitud h on i.iddatosolicitud = h.id
       where e.idventa = :IDVENTA or ( a.codigo = :CODIGO and a.cia = :CIA) ";
 		$sentencia = $conn->prepare($sql_z);
 

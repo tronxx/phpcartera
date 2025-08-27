@@ -1,0 +1,48 @@
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1200px; /* Opcional: máximo ancho del contenedor */
+    margin: 0 auto; /* Centrar el grid */
+    padding: 0 1rem; /* Padding en móviles */
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+
+
+/* Media Queries para responsividad */
+@media (max-width: 1024px) {
+    .column {
+        flex: 1 1 calc(50% - 1rem); /* 2 columnas en tablets */
+    }
+}
+
+@media (max-width: 600px) {
+    .grid {
+        padding: 0 0.5rem;
+    }
+    
+    .column {
+        flex: 1 1 100%; /* 1 columna en móviles */
+        min-width: auto;
+    }
+    
+    .row {
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
+/* Efectos hover para mejor UX */
+.column input[type="text"]:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
