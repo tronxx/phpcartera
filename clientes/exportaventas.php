@@ -120,6 +120,8 @@ if($accion_z == "EXPORTAR_SOLCITUD_VENTA") {
       left outer join datosolicitud h on i.iddatosolicitud = h.id
       where e.idventa = :IDVENTA or ( a.codigo = :CODIGO and a.cia = :CIA) ";
 		$sentencia = $conn->prepare($sql_z);
+    $tipotc = 630; // Tipo de clave de tarjeta de credito
+    $tipovta = 3; // Tipo de venta
 
 		#$sentencia=$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		$sentencia->bindParam(":CODIGO", $codigo, PDO::PARAM_STR );
