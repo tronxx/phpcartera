@@ -100,7 +100,7 @@ if($accion_z == "EXPORTAR_SOLCITUD_VENTA") {
     }
   	$conn=conecta_pdo();
 		# echo $condiciones_z;
-    $sql_z = "select * from ventas where idventa = :IDVENTA";
+    # $sql_z = "select * from ventas where idventa = :IDVENTA";
 		$sql_z =  "select e.idventa, e.codigo, e.cia, a.nombre, a.calle, a.numpredio,
       a.codpostal, a.colonia, c.ciudad, e.siono, e.qom, e.ticte, f.codigo as ubica,
       g.codigo as promotor, e.opcion, e.comisionpromotor as comisionprom,
@@ -114,7 +114,7 @@ if($accion_z == "EXPORTAR_SOLCITUD_VENTA") {
       left outer join clientes a on e.idcliente = a.id
       left outer join ciudades c on a.idciudad = c.id
       left outer join nombres d on a.idnombre = d.id
-      left outer join ubivtas f on e.idtienda = f.id
+      left outer join ubivtas f on e.idubica = f.id
       left outer join promotores g on e.idpromotor = g.id
       left outer join solicitudes i on e.idventa = i.idcliente and i.tipo = :TIPOVTA
       and i.iddato = :TIPOTC
